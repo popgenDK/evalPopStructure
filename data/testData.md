@@ -6,4 +6,4 @@ Populations are
  - MEX: Mexican Ancestry in Los Angeles
  - CHB: Han Chinese in Beijing, China
 
-
+Data is in both plink binary files and as R objects (geno.Rdata)
