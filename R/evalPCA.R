@@ -88,7 +88,7 @@ evalPCA <- function(res,k=2){
 plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
                        title="Correlation of residuals", min_z=-0.1,max_z=0.1, 
                        cex.main=1.5, cex.lab=1.5, cex.legend=1.5, color_palette=c("#001260", "#EAEDE9", "#601200"),
-                       pop_labels = c(T,T), plot_legend = T, adjlab = 0.1, rotatelabpop=0, rotatelabsuperpop=0,lineswidth=1, lineswidthsuperpop=2,
+                       pop_labels = c(T,T), plot_legend = TRUE, adjlab = 0.1, rotatelabpop=0, rotatelabsuperpop=0,lineswidth=1, lineswidthsuperpop=2,
                        adjlabsuperpop=0.16,cex.lab.2 = 1.5){
   
   op <- par(mfrow=c(1,1) ,mar=c(5,4,4,2) +0.1,xpd=FALSE, oma=c(0,0,0,0))
