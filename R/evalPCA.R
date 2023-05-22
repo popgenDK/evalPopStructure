@@ -91,7 +91,7 @@ plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
                        pop_labels = c(T,T), plot_legend = T, adjlab = 0.1, rotatelabpop=0, rotatelabsuperpop=0,lineswidth=1, lineswidthsuperpop=2,
                        adjlabsuperpop=0.16,cex.lab.2 = 1.5){
   
-  op <- par(mfrow=c(1,1) ,mar=c(5,4,4,2) +0.1,xpd=F, oma=c(0,0,0,0))
+  op <- par(mfrow=c(1,1) ,mar=c(5,4,4,2) +0.1,xpd=FALSE, oma=c(0,0,0,0))
   on.exit(par(op))
   
   N <- dim(cor_mat)[1]
@@ -174,12 +174,12 @@ plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
   }else
     par(mar=c(5,4,4,5),oma=c(1,4.5,2,0))
   image(t(cor_mat), col=rampcols, breaks=rampbreaks,
-        yaxt="n",xaxt="n", zlim=c(min_z,max_z),useRaster=T,
+        yaxt="n",xaxt="n", zlim=c(min_z,max_z),useRaster=TRUE,
         main=title, 
-        oldstyle=T,cex.main=cex.main,xpd=NA)
-  image(ifelse(t(cor_mat>max_z),1,NA),col="darkred",add=T)
-  if(min(cor_mat)<min_z) image(ifelse(t(cor_mat<min_z),1,NA),col="darkslateblue",add=T)
-  image(ifelse(t(cor_mat==10),1,NA),col="black",add=T)
+        oldstyle=TRUE,cex.main=cex.main,xpd=NA)
+  image(ifelse(t(cor_mat>max_z),1,NA),col="darkred",add=TRUE)
+  if(min(cor_mat)<min_z) image(ifelse(t(cor_mat<min_z),1,NA),col="darkslateblue",add=TRUE)
+  image(ifelse(t(cor_mat==10),1,NA),col="black",add=TRUE)
   
   # put pop info
   if(pop_labels[2])
@@ -187,9 +187,9 @@ plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
   if(pop_labels[1])
     text(-adjlab,sort(tapply(1:length(pop),pop,mean)/length(pop)),unique(pop),xpd=NA, cex=cex.lab,srt=90-rotatelabpop)
   abline(v=grconvertX(cumsum(sapply(unique(pop),function(x){sum(pop==x)}))/N,"npc","user"),
-         col=1,lwd=lineswidth,xpd=F)
+         col=1,lwd=lineswidth,xpd=FALSE)
   abline(h=grconvertY(cumsum(sapply(unique(pop),function(x){sum(pop==x)}))/N, "npc", "user"),
-         col=1,lwd=lineswidth,xpd=F)
+         col=1,lwd=lineswidth,xpd=FALSE)
   
   # put superpop if not null
     if(!is.null(superpop)){
@@ -199,9 +199,9 @@ plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
     if(pop_labels[1])
       text(-adjlabsuperpop,sort(tapply(1:length(superpop),superpop,mean)/length(superpop)),unique(superpop),xpd=NA, cex=cex.lab.2,srt=90-rotatelabsuperpop,font=2)
     abline(v=grconvertX(cumsum(sapply(unique(superpop),function(x){sum(superpop==x)}))/N,"npc","user"),
-           col=1,lwd=lineswidthsuperpop,xpd=F)
+           col=1,lwd=lineswidthsuperpop,xpd=FALSE)
     abline(h=grconvertY(cumsum(sapply(unique(superpop),function(x){sum(superpop==x)}))/N, "npc", "user"),
-           col=1,lwd=lineswidthsuperpop,xpd=F)
+           col=1,lwd=lineswidthsuperpop,xpd=FALSE)
   }
   
   if(plot_legend){
