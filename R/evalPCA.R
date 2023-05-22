@@ -47,15 +47,20 @@ makePCA <- function(g,method="standard",center=TRUE,scale=TRUE){
 
 evalPCA <- function(res,k=2){
 
-  get_b_hat <- function(g, phatk,N){
+
+  if(res$method == "admixture"){
+    res$N <- nrow(res$Q)
+    res$D_hat <- diag(colMeans(res$g * (2 - res$g)))
+  }
+  get_b_hat <- function(res, phatk){
     # get empirical correlation matrix,
     # uses g and phatk
-    rk <- g %*% (diag(N) - phatk)
+    rk <- res$g %*% (diag(res$N) - phatk)
     return(cor(rk))
   }
 
-  get_c_hat <- function(phatk,N){
-    Cbig <- (diag(N) - phatk) %*% res$D_hat %*% (diag(N) - phatk)
+  get_c_hat <- function(res,phatk){
+    Cbig <- (diag(res$N) - phatk) %*% res$D_hat %*% (diag(res$N) - phatk)
     return(cov2cor(Cbig))
   }
   get_phat <- function(res){
@@ -65,16 +70,23 @@ evalPCA <- function(res,k=2){
       s_k <- rbind(t(res$vectors)[1:k,], 1)
       return( t(s_k) %*% MASS::ginv(s_k %*% t(s_k)) %*% s_k )
     }
+    else if(res$method == "admixture"){
+      Qhat <- t(res$Q)
+      return(t(Qhat) %*% MASS::ginv(Qhat %*% t(Qhat)) %*% Qhat)
+    }
+
   }
 
+
   phatk <- get_phat(res)
-  bhat <- get_b_hat(res$g, phatk,res$N)
-  chat <- get_c_hat(phatk,res$N)
+  bhat <- get_b_hat(res,phatk)
+  chat <- get_c_hat(res,phatk)
   return( list(corres=bhat - chat ,bhat=bhat,chat=chat,phatk=phatk))
 }
 
+
 plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
-                       title="Correlation of residuals", min_z=NA,max_z=NA, 
+                       title="Correlation of residuals", min_z=-0.1,max_z=0.1, 
                        cex.main=1.5, cex.lab=1.5, cex.legend=1.5, color_palette=c("#001260", "#EAEDE9", "#601200"),
                        pop_labels = c(T,T), plot_legend = T, adjlab = 0.1, rotatelabpop=0, rotatelabsuperpop=0,lineswidth=1, lineswidthsuperpop=2,
                        adjlabsuperpop=0.16,cex.lab.2 = 1.5){
