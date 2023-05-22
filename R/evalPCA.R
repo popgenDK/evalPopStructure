@@ -206,7 +206,7 @@ plotCorRes <- function(cor_mat, pop=NULL, ord=NULL, superpop=NULL,
   
   if(plot_legend){
     par(mar=c(5,0.5,4,2))
-    plot(c(0,1),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = '')    
+    plot(c(0,1),c(0,1),type = 'n', axes = FALSE,xlab = '', ylab = '', main = '')    
     
     rasterImage(rlegend, 0, 0.25, 0.4,0.75)
     text(x=0.8, y = c(0.25,0.5, 0.75),
