@@ -47,22 +47,31 @@ makePCA <- function(g,method="standard",center=TRUE,scale=TRUE){
 
 evalPCA <- function(res,k=2){
 
+  
 
   if(res$method == "admixture"){
     res$N <- nrow(res$Q)
     res$D_hat <- diag(colMeans(res$g * (2 - res$g)))
   }
+  if(res$method == "PI"){
+    res$N <- ncol(res$PI)
+    res$D_hat <- diag(colMeans(res$g * (2 - res$g)))
+  }
+
+  # get empirical correlation matrix,
   get_b_hat <- function(res, phatk){
-    # get empirical correlation matrix,
-    # uses g and phatk
+    
     rk <- res$g %*% (diag(res$N) - phatk)
     return(cor(rk))
   }
 
+  # get estimated correlation matrix under admixture model
   get_c_hat <- function(res,phatk){
     Cbig <- (diag(res$N) - phatk) %*% res$D_hat %*% (diag(res$N) - phatk)
     return(cov2cor(Cbig))
   }
+
+  ## get project matrix (Residual = genotype ( I - projection matrix )
   get_phat <- function(res){
     if(res$method == "CS")
       return(res$vectors[,1:k] %*% t(res$vectors[,1:k])) 
@@ -74,6 +83,13 @@ evalPCA <- function(res,k=2){
       Qhat <- t(res$Q)
       return(t(Qhat) %*% MASS::ginv(Qhat %*% t(Qhat)) %*% Qhat)
     }
+     else if(res$method == "PI"){
+      ## sample k+50 rows of PI ( needs to have min rank k)
+      PIsam <- res$PI[sample(1:nrow(res$PI),min(k+50,nrow(res$PI))),]
+      return( t(PIsam)%*%MASS::ginv(PIsam%*%t(PIsam))%*%PIsam )
+    }
+    else
+      stop("no such method")
 
   }
 
