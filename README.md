@@ -27,11 +27,11 @@ which produces the plots
 
 ## R code with multiple PCA normalazation examples and ADMIXTURE results
 [colab notebook](evalPCA.ipynb)
-The notebook can also be run in jypeter or using the colab link (link in top of document)
+The notebook can also be run in jypeter or using the colab link (press the "colab" link in top of document to run interactively)
 
-## step my step example using the Chen & Storey nomalization
-[colab notebook](evalPCA_step_by_step_example_with_Chen%26Story_PCA.ipynb)
-The notebook can also be run in jypeter or using the colab link (link in top of document)
+## step by step example using the Chen & Storey nomalization
+[colab notebook](evalPCA_step_by_step_example_with_Chen%26Storey_PCA.ipynb)
+The notebook can also be run in jypeter or using the colab link (press the "colab" link in top of document to run interactively)
 
 # citation
 Evaluation of population structure inferred by principal component analysis or the admixture model
