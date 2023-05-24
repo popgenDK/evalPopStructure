@@ -1,5 +1,4 @@
-
-makePCA <- function(g,method="standard",center=TRUE,scale=TRUE){
+makePCA <- function(g,method="standard",center=TRUE,scale=TRUE,fast=FALSE,k=20){
 
 
   res <- list(method=method)
@@ -11,15 +10,15 @@ makePCA <- function(g,method="standard",center=TRUE,scale=TRUE){
     cat("\nperforming mean imputation of missing genotypes\n")
     avg <- colMeans(g,na.rm=T) 
     g[is.na(g)] <- avg[ceiling(which(is.na(g))/res$M)]
-  } else
-  cat("\nno missing genotypes\n")
-
+  } 
   res$g <- g
   d_hat <- colMeans(g * (2 - g)) # average heterozygosity per indivdual
   res$D_hat <- diag(d_hat) # diagonal matrix of d_hat
 
 
   if(method == "CS" ){
+    if(fast)
+      stop("\nno fast version of CS\n")
     #chen and story
     res$cov <- 1 / res$M * (t(g) %*% g) - res$D_hat
   }
@@ -28,23 +27,35 @@ makePCA <- function(g,method="standard",center=TRUE,scale=TRUE){
     if(center){
       avg <- rowMeans(g)
       gtilde <- gtilde-avg
+      res$avg <- avg
     }
     if(scale){
       sd <- apply(gtilde, 1, sd)
       sd[sd <= 0] <- 1 # in case there is any fixed snp
       gtilde <- gtilde / sd
+      res$sd <- sd
     }
-    res$cov <- t(gtilde)%*%gtilde / res$M
+    if(fast){
+      if(!require(pcaone))
+        stop("need to install the package \"pcaone\"")
+      res$svd <- pcaone(gtilde,k=k) #very fast PCA (k PCs)
+    }
+    else
+      res$cov <- t(gtilde)%*%gtilde / res$M
   }
   else
     stop("no such method")
 
-
-  res$eigen <- eigen(res$cov)
-  res$vectors <- res$eigen$vectors
+  if(fast)
+    res$vectors <- res$svd$v
+  else{
+    res$eigen <- eigen(res$cov)
+    res$vectors <- res$eigen$vectors
+  }
   res
 }
 
+ 
 evalPCA <- function(res,k=2){
 
   
@@ -60,8 +71,16 @@ evalPCA <- function(res,k=2){
 
   # get empirical correlation matrix,
   get_b_hat <- function(res, phatk){
-    
-    rk <- res$g %*% (diag(res$N) - phatk)
+    if( !is.null(res$svd)){
+      res$PI2 <- res$svd$u[,1:k]%*%diag(res$svd$d[1:k])%*%t(res$svd$v[,1:k]) 
+      if(!is.null(res$sd))
+        res$PI2 <- res$PI2 * res$sd
+      if(!is.null(res$avg))
+        res$PI2 <- res$PI2 + res$avg
+      rk <- res$g - res$PI2
+    }
+    else
+      rk <- res$g %*% (diag(res$N) - phatk)
     return(cor(rk))
   }
 
