@@ -72,7 +72,7 @@ evalPCA <- function(res,k=2){
   # get empirical correlation matrix,
   get_b_hat <- function(res, phatk){
     if( !is.null(res$svd)){
-      res$PI2 <- res$svd$u[,1:k]%*%diag(res$svd$d[1:k])%*%t(res$svd$v[,1:k]) 
+      res$PI2 <- res$svd$u[,1:k,drop=FALSE]%*%diag(res$svd$d[1:k,drop=FALSE])%*%t(res$svd$v[,1:k,drop=FALSE]) 
       if(!is.null(res$sd))
         res$PI2 <- res$PI2 * res$sd
       if(!is.null(res$avg))
@@ -93,9 +93,9 @@ evalPCA <- function(res,k=2){
   ## get project matrix (Residual = genotype ( I - projection matrix )
   get_phat <- function(res){
     if(res$method == "CS")
-      return(res$vectors[,1:k] %*% t(res$vectors[,1:k])) 
+      return(res$vectors[,1:k,drop=FALSE] %*% t(res$vectors[,1:k,drop=FALSE])) 
     else if(res$method == "standard"){
-      s_k <- rbind(t(res$vectors)[1:k,], 1)
+      s_k <- rbind(t(res$vectors)[1:k,k,drop=FALSE], 1)
       return( t(s_k) %*% MASS::ginv(s_k %*% t(s_k)) %*% s_k )
     }
     else if(res$method == "admixture"){
