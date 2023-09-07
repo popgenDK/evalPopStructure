@@ -22,30 +22,11 @@ res <- evalPCA(pca,k=2)
 plotCorRes(res$corres, pop,max=0.1)
 ````
 
-
-## Quick start with your own data ( PCA in R)
-````
-#load functions
-source("https://raw.githubusercontent.com/popgenDK/evalPopStructure/main/R/evalPCA.R")
-
-#load matrix with genotypes (geno)
-load(url("http://pontus.popgen.dk/albrecht/open/admixTjeck/data.Rdata"))
-
-#perform PCA with genotypes zero mean normalized
- pca <-  makePCA(t(geno),method="standard",center=TRUE,scale=FALSE)
- plot(pca$vectors[,1:2],col=pop,xlab="PC1",ylab="PC2",cex.lab=1.5,main="centered genotypes")
- legend("center",fill=1:4,levels(pop),cex=2,bty="n")
-
-# estimate correlations
-res <- evalPCA(pca,k=2)
-plotCorRes(res$corres, pop,max=0.1)
-````
-
-
-
 which produces the plots
 ![Alt text](data/evalAdmixTestDataPCA2.png?raw=true "Title")
 ![Alt text](data/evalAdmixTestDataPCA2eval.png?raw=true "Title")
+
+
 
 ## R code with multiple PCA normalazation examples and ADMIXTURE results
 [colab notebook](evalPCA.ipynb)
