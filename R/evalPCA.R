@@ -95,7 +95,7 @@ evalPCA <- function(res,k=2){
     if(res$method == "CS")
       return(res$vectors[,1:k,drop=FALSE] %*% t(res$vectors[,1:k,drop=FALSE])) 
     else if(res$method == "standard"){
-      s_k <- rbind(t(res$vectors)[1:k,k,drop=FALSE], 1)
+      s_k <- rbind(t(res$vectors)[1:k,,drop=FALSE], 1)
       return( t(s_k) %*% MASS::ginv(s_k %*% t(s_k)) %*% s_k )
     }
     else if(res$method == "admixture"){
