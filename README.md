@@ -10,7 +10,7 @@ Principal component analysis (PCA) is commonly used in genetics to infer and vis
 source("https://raw.githubusercontent.com/popgenDK/evalPopStructure/main/R/evalPCA.R")
 
 #load matrix with genotypes (geno)
-load(url("http://pontus.popgen.dk/albrecht/open/admixTjeck/data.Rdata"))
+load(url("http://popgen.dk/albrecht/open/admixTjeck/data.Rdata"))
 
 #perform PCA with genotypes zero mean normalized
  pca <-  makePCA(t(geno),method="standard",center=TRUE,scale=FALSE)
